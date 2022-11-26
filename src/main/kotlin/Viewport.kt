@@ -19,10 +19,11 @@ class Viewport(
         return origin + (right * dx) + (up * dy) + (front * size.z)
     }
 
-    fun traceRay(ray: Vector, scene: Scene, range: ClosedFloatingPointRange<Double>): Sphere? {
+    fun traceRay(p: Vector, scene: Scene, range: ClosedFloatingPointRange<Double>): Pair<Sphere?, Vector> {
+        val ray = p - origin
         var closest: Sphere? = null
         var distance: Double = POSITIVE_INFINITY
-        for (sphere in scene) {
+        for (sphere in scene.spheres) {
             val (t1, t2) = intersect(ray, sphere)
             if (t1 in range && t1 < distance) {
                 closest = sphere
@@ -32,7 +33,9 @@ class Viewport(
                 distance = t2
             }
         }
-        return closest
+        return if (closest == null) null to Vector.ORIGIN else {
+            closest to origin + ray * distance
+        }
     }
 
     internal fun intersect(ray: Vector, sphere: Sphere): Pair<Double, Double> {

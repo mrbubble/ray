@@ -7,30 +7,50 @@ import org.w3c.dom.HTMLCanvasElement
 import kotlin.Double.Companion.POSITIVE_INFINITY
 import kotlin.math.roundToInt
 
+/**
+ * Inspired by:
+ * https://gabrielgambetta.com/computer-graphics-from-scratch/
+ */
 fun main() {
     window.onload = {
         val c = makeCanvas("viewport")
         document.body!!.appendChild(c)
-        val scene = arrayOf(
-            Sphere(Vector(0.0, -1.0, -3.0), 1.0, Color.of(1.0, 0.0, 0.0)),
-            Sphere(Vector(-2.0, 0.0, -4.0), 1.0, Color.of(0.0, 1.0, 0.0)),
-            Sphere(Vector(2.0, 0.0, -4.0), 1.0, Color.of(0.0, 0.0, 1.0)),
+        val scene = Scene(
+            arrayOf(
+                Sphere(Vector(0.0, -1.0, -3.0), 1.0, Color.RED),
+                Sphere(Vector(-2.0, 0.0, -4.0), 1.0, Color.GREEN),
+                Sphere(Vector(2.0, 0.0, -4.0), 1.0, Color.BLUE),
+                Sphere(Vector(0.0, -5001.0, 0.0), 5000.0, Color.YELLOW),
+            ), arrayOf(
+                AmbientLight(Color.WHITE * 0.2),
+                PointLight(Vector(2.0, 1.0, 0.0), Color.WHITE * 0.6),
+                DirectionalLight(Vector(-1.0, -4.0, 4.0), Color.WHITE * 0.2)
+            )
         )
         val viewport = Viewport()
-        val background = Color.of(1.0, 1.0, 1.0)
+        val background = Color.WHITE // Color.of(0.0, .75, 1.0)
         with(c.get2DContext()) {
             val stream = newPixelStream()
             while (!stream.done) {
                 val ray = viewport.canvasToViewport(Point.from(stream.position), Point.from(stream.size))
-                val sphere = viewport.traceRay(ray, scene, 1.0..POSITIVE_INFINITY)
-                stream.addPixel(sphere?.color ?: background)
+                val (sphere, p) = viewport.traceRay(ray, scene, 1.0..POSITIVE_INFINITY)
+                if (sphere == null) {
+                    stream.addPixel(background)
+                } else {
+                    var color = Color.BLACK
+                    val normal = p - sphere.center
+                    for (light in scene.lights) {
+                        color += light.illuminate(p, normal, sphere.color)
+                    }
+                    stream.addPixel(color)
+                }
             }
             putPixelStream(stream)
         }
     }
 }
 
-fun makeCanvas(id: String, size: Point = Point(500.0, 500.0)): HTMLCanvasElement {
+fun makeCanvas(id: String, size: Point = Point(600.0, 600.0)): HTMLCanvasElement {
     return document.create.canvas {
         attributes["id"] = id
         width = "${size.x.roundToInt()}"
