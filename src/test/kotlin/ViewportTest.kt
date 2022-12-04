@@ -62,7 +62,7 @@ class ViewportTest {
     fun testIntersect() {
         val viewport = Viewport()
         val ray = viewport.front * 2.0
-        val black = Color.of(0.0, 0.0, 0.0)
+        val black = Material(Color.BLACK)
         assertEquals(3.0 to 7.0, viewport.intersect(ray, Sphere(Vector(0.0, 0.0, -10.0), 4.0, black)))
         assertEquals(5.0 to 5.0, viewport.intersect(ray, Sphere(Vector(4.0, 0.0, -10.0), 4.0, black)))
         assertEquals(4.0 to 6.0, viewport.intersect(ray, Sphere(Vector(2.0 * sqrt(3.0), 0.0, -10.0), 4.0, black)))

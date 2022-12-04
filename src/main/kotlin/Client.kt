@@ -17,10 +17,18 @@ fun main() {
         document.body!!.appendChild(c)
         val scene = Scene(
             arrayOf(
-                Sphere(Vector(0.0, -1.0, -3.0), 1.0, Color.RED),
-                Sphere(Vector(-2.0, 0.0, -4.0), 1.0, Color.GREEN),
-                Sphere(Vector(2.0, 0.0, -4.0), 1.0, Color.BLUE),
-                Sphere(Vector(0.0, -5001.0, 0.0), 5000.0, Color.YELLOW),
+                Sphere(
+                    Vector(0.0, -1.0, -3.0),
+                    1.0,
+                    Material(Color.RED, shininess = 500.0)
+                ),
+                Sphere(
+                    Vector(-2.0, 0.0, -4.0),
+                    1.0,
+                    Material(Color.GREEN, shininess = 10.0)
+                ),
+                Sphere(Vector(2.0, 0.0, -4.0), 1.0, Material(Color.BLUE, shininess = 500.0)),
+                Sphere(Vector(0.0, -5001.0, 0.0), 5000.0, Material(Color.YELLOW, shininess = 1000.0)),
             ), arrayOf(
                 AmbientLight(Color.WHITE * 0.2),
                 PointLight(Vector(2.0, 1.0, 0.0), Color.WHITE * 0.6),
@@ -40,7 +48,7 @@ fun main() {
                     var color = Color.BLACK
                     val normal = p - sphere.center
                     for (light in scene.lights) {
-                        color += light.illuminate(p, normal, sphere.color)
+                        color += light.illuminate(p, normal, viewport.origin, sphere.material)
                     }
                     stream.addPixel(color)
                 }
