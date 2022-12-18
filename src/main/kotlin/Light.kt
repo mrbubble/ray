@@ -1,11 +1,11 @@
 import kotlin.math.pow
 
 interface Light {
-    fun illuminate(p: Vector, normal: Vector, origin: Vector, m: Material): Color
+    fun illuminate(p: Vector, normal: Vector, origin: Vector, m: Material, scene: Scene): Color
 }
 
 class AmbientLight(private val color: Color) : Light {
-    override fun illuminate(p: Vector, normal: Vector, origin: Vector, m: Material): Color {
+    override fun illuminate(p: Vector, normal: Vector, origin: Vector, m: Material, scene: Scene): Color {
         return color * m.ambientColor
     }
 }
@@ -13,7 +13,11 @@ class AmbientLight(private val color: Color) : Light {
 sealed class VectorLight : Light {
     protected abstract val color: Color
     abstract fun incidence(p: Vector): Vector
-    override fun illuminate(p: Vector, normal: Vector, origin: Vector, m: Material): Color {
+    abstract fun isShadowed(p: Vector, scene: Scene): Boolean
+    override fun illuminate(p: Vector, normal: Vector, origin: Vector, m: Material, scene: Scene): Color {
+        if (isShadowed(p, scene)) {
+            return Color.BLACK
+        }
         val l = incidence(p)
         val n = normal.normalized
         val v = (origin - p).normalized
@@ -44,9 +48,15 @@ sealed class VectorLight : Light {
     }
 }
 
+private const val EPSILON = 1e-10
+
 class PointLight(private val position: Vector, override val color: Color) : VectorLight() {
     override fun incidence(p: Vector): Vector {
         return (position - p).normalized
+    }
+
+    override fun isShadowed(p: Vector, scene: Scene): Boolean {
+        return scene.traceRay(Ray(p to position), EPSILON..1.0).first != null
     }
 }
 
@@ -54,5 +64,9 @@ class DirectionalLight(direction: Vector, override val color: Color) : VectorLig
     private val direction = -direction.normalized
     override fun incidence(p: Vector): Vector {
         return direction
+    }
+
+    override fun isShadowed(p: Vector, scene: Scene): Boolean {
+        return scene.traceRay(Ray(p, direction), EPSILON..Double.POSITIVE_INFINITY).first != null
     }
 }

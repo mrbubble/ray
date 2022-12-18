@@ -40,15 +40,15 @@ fun main() {
         with(c.get2DContext()) {
             val stream = newPixelStream()
             while (!stream.done) {
-                val ray = viewport.canvasToViewport(Point.from(stream.position), Point.from(stream.size))
-                val (sphere, p) = viewport.traceRay(ray, scene, 1.0..POSITIVE_INFINITY)
+                val pixel = viewport.canvasToViewport(Point.from(stream.position), Point.from(stream.size))
+                val (sphere, p) = scene.traceRay(Ray(viewport.origin to pixel), 1.0..POSITIVE_INFINITY)
                 if (sphere == null) {
                     stream.addPixel(background)
                 } else {
                     var color = Color.BLACK
                     val normal = p - sphere.center
                     for (light in scene.lights) {
-                        color += light.illuminate(p, normal, viewport.origin, sphere.material)
+                        color += light.illuminate(p, normal, viewport.origin, sphere.material, scene)
                     }
                     stream.addPixel(color)
                 }

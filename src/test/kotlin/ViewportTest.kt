@@ -1,5 +1,3 @@
-import kotlin.Double.Companion.POSITIVE_INFINITY
-import kotlin.math.sqrt
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -56,19 +54,5 @@ class ViewportTest {
         assertEquals(v.front, (center - v.origin).normalized, 1e-10)
         assertEquals(v.up, (top - center).normalized, 1e-10)
         assertEquals(v.right, (right - center).normalized, 1e-10)
-    }
-
-    @Test
-    fun testIntersect() {
-        val viewport = Viewport()
-        val ray = viewport.front * 2.0
-        val black = Material(Color.BLACK)
-        assertEquals(3.0 to 7.0, viewport.intersect(ray, Sphere(Vector(0.0, 0.0, -10.0), 4.0, black)))
-        assertEquals(5.0 to 5.0, viewport.intersect(ray, Sphere(Vector(4.0, 0.0, -10.0), 4.0, black)))
-        assertEquals(4.0 to 6.0, viewport.intersect(ray, Sphere(Vector(2.0 * sqrt(3.0), 0.0, -10.0), 4.0, black)))
-        assertEquals(
-            POSITIVE_INFINITY to POSITIVE_INFINITY,
-            viewport.intersect(ray, Sphere(Vector(6.0, 0.0, -10.0), 4.0, black))
-        )
     }
 }
