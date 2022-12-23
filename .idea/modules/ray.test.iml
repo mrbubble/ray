@@ -9,7 +9,7 @@
         </externalSystemTestTasks>
         <testOutputPath>$MODULE_DIR$/../../build/classes/kotlin/test</testOutputPath>
         <compilerSettings>
-          <option name="additionalArguments" value="-Xir-module-name=bubble:ray_test -Xir-only -Xir-per-module-output-name=ray-test -Xir-produce-klib-dir" />
+          <option name="additionalArguments" value="-Xir-only -Xir-per-module-output-name=ray-test -Xir-produce-klib-dir -Xir-module-name=bubble:ray_test" />
         </compilerSettings>
         <compilerArguments>
           <flagArguments>

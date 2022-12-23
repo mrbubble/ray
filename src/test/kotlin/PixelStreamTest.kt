@@ -12,7 +12,7 @@ class PixelStreamTest {
         with(canvas.get2DContext()) {
             val stream = newPixelStream()
             while (!stream.done) {
-                stream.addPixel(Color.of(stream.position.x.toDouble(), stream.position.y.toDouble(), 0.5))
+                stream.addPixel(Color(stream.position.x.toDouble(), stream.position.y.toDouble(), 0.5))
             }
             putPixelStream(stream)
 

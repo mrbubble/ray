@@ -4,7 +4,6 @@ import kotlinx.html.canvas
 import kotlinx.html.dom.create
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
-import kotlin.Double.Companion.POSITIVE_INFINITY
 import kotlin.math.roundToInt
 
 /**
@@ -20,38 +19,32 @@ fun main() {
                 Sphere(
                     Vector(0.0, -1.0, -3.0),
                     1.0,
-                    Material(Color.RED, shininess = 500.0)
+                    Material(Color.RED, shininess = 500.0, reflectiveness = 0.2)
                 ),
                 Sphere(
                     Vector(-2.0, 0.0, -4.0),
                     1.0,
-                    Material(Color.GREEN, shininess = 10.0)
+                    Material(Color.GREEN, shininess = 10.0, reflectiveness = 0.4)
                 ),
-                Sphere(Vector(2.0, 0.0, -4.0), 1.0, Material(Color.BLUE, shininess = 500.0)),
-                Sphere(Vector(0.0, -5001.0, 0.0), 5000.0, Material(Color.YELLOW, shininess = 1000.0)),
+                Sphere(Vector(2.0, 0.0, -4.0), 1.0, Material(Color.BLUE, shininess = 500.0, reflectiveness = 0.3)),
+                Sphere(
+                    Vector(0.0, -5001.0, 0.0),
+                    5000.0,
+                    Material(Color.YELLOW, shininess = 1000.0, reflectiveness = 0.5)
+                ),
             ), arrayOf(
                 AmbientLight(Color.WHITE * 0.2),
                 PointLight(Vector(2.0, 1.0, 0.0), Color.WHITE * 0.6),
                 DirectionalLight(Vector(-1.0, -4.0, 4.0), Color.WHITE * 0.2)
-            )
+            ),
+            Color(0.0, .75, 1.0)
         )
         val viewport = Viewport()
-        val background = Color.WHITE // Color.of(0.0, .75, 1.0)
         with(c.get2DContext()) {
             val stream = newPixelStream()
             while (!stream.done) {
                 val pixel = viewport.canvasToViewport(Point.from(stream.position), Point.from(stream.size))
-                val (sphere, p) = scene.traceRay(Ray(viewport.origin to pixel), 1.0..POSITIVE_INFINITY)
-                if (sphere == null) {
-                    stream.addPixel(background)
-                } else {
-                    var color = Color.BLACK
-                    val normal = p - sphere.center
-                    for (light in scene.lights) {
-                        color += light.illuminate(p, normal, viewport.origin, sphere.material, scene)
-                    }
-                    stream.addPixel(color)
-                }
+                stream.addPixel(scene.illuminate(Ray(viewport.origin to pixel)))
             }
             putPixelStream(stream)
         }

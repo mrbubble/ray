@@ -37,18 +37,17 @@ sealed class VectorLight : Light {
         if (s <= 0.0) {
             return Color.BLACK
         }
-        val r = ((2 * (n dot l) * n) - l).normalized
+        val r = (l reflect n).normalized
         (r dot v).let {
             if (it < 0) {
                 return Color.BLACK
             }
             return color * it.pow(s) * c
-
         }
     }
 }
 
-private const val EPSILON = 1e-10
+internal const val EPSILON = 1e-3
 
 class PointLight(private val position: Vector, override val color: Color) : VectorLight() {
     override fun incidence(p: Vector): Vector {

@@ -29,6 +29,11 @@ data class Vector(val x: Double, val y: Double, val z: Double) {
         return Vector(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x)
     }
 
+    infix fun reflect(normal: Vector): Vector {
+        val n = normal.normalized
+        return 2.0 * (n dot this) * n - this
+    }
+
     val lengthSquared get() = this dot this
     val length get() = sqrt(lengthSquared)
     val normalized get() = this / length
@@ -39,7 +44,7 @@ data class Vector(val x: Double, val y: Double, val z: Double) {
         val Y_AXIS = Vector(0.0, 1.0, 0.0)
         val Z_AXIS = Vector(0.0, 0.0, 1.0)
     }
- }
+}
 
 operator fun Double.times(v: Vector): Vector {
     return v * this

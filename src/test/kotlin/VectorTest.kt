@@ -45,7 +45,7 @@ class VectorTest {
 
     @Test
     fun testNormalized() {
-        assertEquals(Vector(.36 , .48, .8), Vector(9.0, 12.0, 20.0).normalized)
+        assertEquals(Vector(.36, .48, .8), Vector(9.0, 12.0, 20.0).normalized)
     }
 
     @Test
@@ -60,8 +60,8 @@ class VectorTest {
 
     @Test
     fun testTimes() {
-        assertEquals(Vector(2.0 , 4.0, 6.0), Vector(1.0, 2.0, 3.0) * 2.0)
-        assertEquals(Vector(2.0 , 4.0, 6.0), 2.0 * Vector(1.0, 2.0, 3.0))
+        assertEquals(Vector(2.0, 4.0, 6.0), Vector(1.0, 2.0, 3.0) * 2.0)
+        assertEquals(Vector(2.0, 4.0, 6.0), 2.0 * Vector(1.0, 2.0, 3.0))
     }
 
     @Test
@@ -85,21 +85,27 @@ class VectorTest {
 
     @Test
     fun testDiv() {
-        assertEquals(Vector(1.0 , 2.0, 3.0), Vector(2.0, 4.0, 6.0) / 2.0)
+        assertEquals(Vector(1.0, 2.0, 3.0), Vector(2.0, 4.0, 6.0) / 2.0)
     }
 
     @Test
     fun testPlus() {
-        assertEquals(Vector(5.0 , 7.0, 9.0), Vector(1.0, 2.0, 3.0) + Vector(4.0, 5.0, 6.0) )
+        assertEquals(Vector(5.0, 7.0, 9.0), Vector(1.0, 2.0, 3.0) + Vector(4.0, 5.0, 6.0))
     }
 
     @Test
     fun testMinus() {
-        assertEquals(Vector(3.0 , 3.0, 3.0), Vector(4.0, 5.0, 6.0) - Vector(1.0, 2.0, 3.0) )
+        assertEquals(Vector(3.0, 3.0, 3.0), Vector(4.0, 5.0, 6.0) - Vector(1.0, 2.0, 3.0))
     }
 
     @Test
     fun testUnaryMinus() {
-        assertEquals(Vector(-1.0 , -2.0, -3.0), -Vector(1.0, 2.0, 3.0))
+        assertEquals(Vector(-1.0, -2.0, -3.0), -Vector(1.0, 2.0, 3.0))
+    }
+
+    @Test
+    fun testReflect() {
+        assertEquals(Vector(4.0, 3.0, 0.0), Vector(3.0, 4.0, 0.0) reflect Vector(1.0, 1.0, 0.0), 1e-10)
+        assertEquals(Vector(-1.0, 2.0, 2.0), Vector(3.0, 0.0, 0.0) reflect Vector(1.0, 1.0, 1.0), 1e-10)
     }
 }
