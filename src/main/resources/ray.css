@@ -13,9 +13,12 @@ body {
 
 #viewport {
   display: block;
+  box-sizing: border-box;
   margin: auto;
-  max-width: 1000px;
-  max-height: 1000px;
+  width: 100vmin;
+  height: 100vmin;
+  max-width: 622px;
+  max-height: 622px;
   border: 1px solid black;
   background: lightgray;
   padding: 10px;
