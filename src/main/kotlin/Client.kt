@@ -4,6 +4,8 @@ import kotlinx.html.canvas
 import kotlinx.html.dom.create
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
+import org.w3c.dom.HTMLElement
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
@@ -12,6 +14,10 @@ import kotlin.math.roundToInt
  */
 fun main() {
     window.onload = {
+        window.onresize = {
+            adjustSize()
+        }
+        adjustSize()
         val c = makeCanvas("viewport")
         document.body!!.appendChild(c)
         val scene = Scene(
@@ -49,6 +55,12 @@ fun main() {
             putPixelStream(stream)
         }
     }
+}
+
+fun adjustSize() {
+    val size = min(window.innerHeight, window.innerWidth)
+    (document.documentElement as HTMLElement).style.setProperty("--win-height", "${window.innerHeight}px")
+    (document.documentElement as HTMLElement).style.setProperty("--win-min", "${size}px")
 }
 
 fun makeCanvas(id: String, size: Point = Point(600.0, 600.0)): HTMLCanvasElement {

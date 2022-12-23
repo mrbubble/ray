@@ -1,13 +1,17 @@
+:root {
+    --win-height: 100%;
+    --win-min: 100vmin;
+}
 html,
 body {
   margin: 0;
   padding: 0;
   border: 0;
-  height: 100%;
+  width: 100vw;
+  height: var(--win-height);
 }
 
 body {
-  width: 100vw;
   display: flex;
   justify-content: center;
 }
@@ -16,8 +20,8 @@ body {
   display: block;
   box-sizing: border-box;
   margin: auto;
-  width: 100vmin;
-  height: 100vmin;
+  width: var(--win-min);
+  height: var(--win-min);
   max-width: 622px;
   max-height: 622px;
   border: 1px solid black;
